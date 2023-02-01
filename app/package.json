@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+        "express": "^4.17.1",
+        "nodemon": "^2.0.20",
+        "serve-favicon": "^2.5.0",
+        "knex": "^0.95.6",
+        "mysql": "^2.18.1",
+        "joi" : "^17.4.2"
+    },
+    "scripts": {
+        "start": "node app.js",
+        "dev": "npm install && nodemon --legacy-watch app.js"
+    }
+}
