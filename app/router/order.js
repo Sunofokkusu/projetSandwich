@@ -94,4 +94,59 @@ router.route("/:id")
     next(405);
   });
 
+  router.route("/:id/item")
+  .get((req, res, next) => {
+    res.setHeader("Content-Type", "application/json");
+    try {
+      order.getItemsFromOrder(req.params.id).then((order) => {
+        if (order.length === 0) {
+          res.status(404).send({
+            type: "error",
+            error: 404,
+            message: "Ressources non disponible : /orders/" + req.params.id + "/item",
+          });
+        } else {
+          let items = [];
+          order.forEach((item) => {
+            items.push({
+                  id: item.id,
+                  uri: item.uri,
+                  name: item.libelle,
+                  price: item.tarif,
+                  quantity: item.quantite
+              });
+          });
+          res.setHeader('Content-Type', 'application/json');
+          res.status(200).send({
+              type: 'collection',
+              count: items.length,
+              items: items
+          });
+        }
+      });
+    } catch (err) {
+      next(500);
+    }
+  })
+  .put(validateUpdate, async (req, res, next) => {
+    res.setHeader("Content-Type", "application/json");
+    try {
+      let isUpdate = await order.updateOrder(req.params.id, req.body.nom, req.body.livraison, req.body.mail);
+      if (isUpdate === 0) {
+        res.status(404).send({
+          type: "error",
+          error: 404,
+          message: "Ressources non disponible : /orders/" + req.params.id,
+        });
+      } else {
+        res.status(204).send();
+      }
+    } catch (err) {
+      next(500);
+    }
+  })
+  .all((req, res, next) => {
+    next(405);
+  });
+
 module.exports = router;

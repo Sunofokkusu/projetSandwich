@@ -1,31 +1,47 @@
-const db = require('../../conf/dbConnexion');
+const db = require("../../conf/dbConnexion");
 
 async function getOrders() {
-    try {
-        return await db('commande').select();   
-    } catch (error) {
-        throw error;
-    }
+  try {
+    return await db("commande").select();
+  } catch (error) {
+    throw error;
+  }
 }
 
-async function  getOrderById(id) {
-    try {
-        return await db('commande').select().where('id', id);
-    } catch (error) {
-        throw error;
-    }
+async function getOrderById(id) {
+  try {
+    return await db("commande").select().where("id", id);
+  } catch (error) {
+    throw error;
+  }
 }
 
-async function updateOrder(id, nom, livraison, mail){
-    try {
-        return await db('commande').update({nom: nom, livraison: new Date(livraison), mail: mail,updated_at: new Date()}).where('id', id);
-    } catch (error) {
-        throw error;
-    }
+async function updateOrder(id, nom, livraison, mail) {
+  try {
+    return await db("commande")
+      .update({
+        nom: nom,
+        livraison: new Date(livraison),
+        mail: mail,
+        updated_at: new Date(),
+      })
+      .where("id", id);
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getItemsFromOrder(id) {
+  try {
+    return await db("item").select().where("command_id", id);
+  } catch (error) {
+    throw error;
+  }
 }
 
 module.exports = {
-    getOrders,
-    getOrderById,
-    updateOrder
-}
+  getOrders,
+  getOrderById,
+  updateOrder,
+  getItemsFromOrder
+};
