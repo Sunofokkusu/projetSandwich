@@ -66,6 +66,10 @@ router.route("/:id")
               order_date: order[0].created_at,
               total_amount: order[0].montant,
             },
+            links: {
+              items: {href: "/orders/"+order[0].id+"/items"},
+              self: {href: "/orders/"+order[0].id}
+            }
           });
         }
       });
@@ -94,7 +98,7 @@ router.route("/:id")
     next(405);
   });
 
-  router.route("/:id/item")
+  router.route("/:id/items")
   .get((req, res, next) => {
     res.setHeader("Content-Type", "application/json");
     try {
@@ -124,23 +128,6 @@ router.route("/:id")
           });
         }
       });
-    } catch (err) {
-      next(500);
-    }
-  })
-  .put(validateUpdate, async (req, res, next) => {
-    res.setHeader("Content-Type", "application/json");
-    try {
-      let isUpdate = await order.updateOrder(req.params.id, req.body.nom, req.body.livraison, req.body.mail);
-      if (isUpdate === 0) {
-        res.status(404).send({
-          type: "error",
-          error: 404,
-          message: "Ressources non disponible : /orders/" + req.params.id,
-        });
-      } else {
-        res.status(204).send();
-      }
     } catch (err) {
       next(500);
     }
