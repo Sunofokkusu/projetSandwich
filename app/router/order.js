@@ -50,27 +50,54 @@ router.route("/:id")
   .get((req, res, next) => {
     res.setHeader("Content-Type", "application/json");
     try {
-      order.getOrderById(req.params.id).then((order) => {
-        if (order.length === 0) {
+      order.getOrderById(req.params.id).then(async (orders) => {
+        if (orders.length === 0) {
           res.status(404).send({
             type: "error",
             error: 404,
             message: "Ressources non disponible : /orders/" + req.params.id,
           });
         } else {
-          res.status(200).send({
-            type: "resource",
+          let query = req.query;
+          let json = '';
+          if(query.embed !== undefined && query.embed === "items"){
+            let itemsFromId = await order.getItemsFromOrder(req.params.id);	
+            let items = [];
+            itemsFromId.forEach((item) => {
+              items.push({
+                    id: item.id,
+                    uri: item.uri,
+                    name: item.libelle,
+                    price: item.tarif,
+                    quantity: item.quantite
+                });
+            });
+            json = {type: "resource",
             order: {
-              id: order[0].id,
-              client_mail: order[0].mail,
-              order_date: order[0].created_at,
-              total_amount: order[0].montant,
+              id: orders[0].id,
+              client_mail: orders[0].mail,
+              order_date: orders[0].created_at,
+              total_amount: orders[0].montant,
+            },
+            items: items,
+            links: {
+              items: {href: "/orders/"+orders[0].id+"/items"},
+              self: {href: "/orders/"+orders[0].id}
+            }}
+          }else{
+            json = {type: "resource",
+            order: {
+              id: orders[0].id,
+              client_mail: orders[0].mail,
+              order_date: orders[0].created_at,
+              total_amount: orders[0].montant,
             },
             links: {
-              items: {href: "/orders/"+order[0].id+"/items"},
-              self: {href: "/orders/"+order[0].id}
-            }
-          });
+              items: {href: "/orders/"+orders[0].id+"/items"},
+              self: {href: "/orders/"+orders[0].id}
+            }}
+          }
+          res.status(200).send(json);
         }
       });
     } catch (err) {
