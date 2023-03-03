@@ -67,7 +67,6 @@ router
         req.body.delivery,
         amount
       );
-      console.log(isInsert);
       if ( !isInsert ) {
         res.status(400).send({
           type: "error",
