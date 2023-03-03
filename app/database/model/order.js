@@ -39,9 +39,26 @@ async function getItemsFromOrder(id) {
   }
 }
 
+async function insertOrder(id, client_name, client_mail, delivery, amount = 0) {
+  try {
+    return await db("commande").insert({
+      id: id,
+      nom: client_name,
+      livraison: new Date(delivery.date + " " + delivery.time),
+      mail: client_mail,
+      montant: amount,
+      created_at: new Date(),
+      updated_at: new Date(),
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getOrders,
   getOrderById,
   updateOrder,
-  getItemsFromOrder
+  getItemsFromOrder,
+  insertOrder,
 };

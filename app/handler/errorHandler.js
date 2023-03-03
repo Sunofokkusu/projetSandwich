@@ -26,7 +26,7 @@ function errorhandler(err, req, res, next) {
             message = "Internal server error";
             break;
     }
-    logger.error(errorCode + " " + message);
+    logger.error(errorCode + " " + message + " at " + req.originalUrl );
     res.status(errorCode).json({
         type: "error",
         error: errorCode,
