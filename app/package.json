@@ -5,7 +5,8 @@
         "serve-favicon": "^2.5.0",
         "knex": "^0.95.6",
         "mysql": "^2.18.1",
-        "joi" : "^17.4.2"
+        "joi" : "^17.4.2",
+        "uuid" : "^8.3.2"
     },
     "scripts": {
         "start": "node app.js",

@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const router = express.Router();
+const {v4 : uuidv4} = require('uuid');
 
 router.use(express.json());
 
@@ -14,8 +15,6 @@ const {
   validateInsert,
 } = require("../validator/orderValidator");
 
-// Helper 
-const { generateIdCommande } = require("../helper/GenerateIdCommande");
 
 router
   .route("/")
@@ -59,7 +58,7 @@ router
           amount += item.price * item.q;
         });
       }
-      let id = generateIdCommande();
+      let id = uuidv4();
       let isInsert = await order.insertOrder(
         id,
         req.body.client_name,
