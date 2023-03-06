@@ -6,19 +6,19 @@ function createFile() {
     fs.mkdirSync("log");
   }
   // crée le fichier log s'il n'existe pas
-  if (!fs.existsSync("log/log.log")) {
-    fs.writeFileSync("log/log.log", "");
+  if (!fs.existsSync("log/app.log")) {
+    fs.writeFileSync("log/app.log", "");
   }
 }
 
 function error(message) {
     createFile();
-    fs.appendFileSync("log/log.log", "ERROR: " + message + " " + new Date() + " \r \n");
+    fs.appendFileSync("log/app.log", "ERROR: " + message + " " + new Date() + " \r \n");
 }
 
 function info(message) {
     createFile();
-    fs.appendFileSync("log/log.log", "INFO: " + message + " " + new Date() + " \r \n");
+    fs.appendFileSync("log/app.log", "INFO: " + message + " " + new Date() + " \r \n");
 }
 
 module.exports = {
