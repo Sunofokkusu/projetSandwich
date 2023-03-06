@@ -33,6 +33,7 @@ router
       if (orders.length === 0 || orders === undefined) {
         next(createDetailsPerso(404, { message: "Ressource non trouvée /orders" , file: __filename, line: 31}));
       } else {
+        let length = orders.length;
         let query = req.query
         if (query.c != undefined) {
           let mail = decodeURI(query.c)
@@ -53,11 +54,17 @@ router
         if (query.page != undefined) {
           page = query.page*10-1
         }
-        for (let i = page; i<=page+10; i++) {
-          tmp.push(orders[i])
+        let stop = false
+        let i = page
+        while(!stop || i<page+10) { 
+          if (orders[i] === undefined) {
+            stop = true
+          } else {
+            tmp.push(orders[i])
+          }
+          i++
         }
         orders = tmp
-      
         let orderFromDb = [];
         orders.forEach((order) => {
           orderFromDb.push({
@@ -78,7 +85,7 @@ router
         res.setHeader("Content-Type", "application/json");
         res.status(200).send({
           type: "collection",
-          count: orders.length,
+          count: length,
           orders: orderFromDb,
         });
       }
