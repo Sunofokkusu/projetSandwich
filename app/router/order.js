@@ -22,6 +22,9 @@ const {
 // Helpers
 const { createDetails, createDetailsPerso } = require("../helpers/errorDetails");
 
+// Handler
+const { infoHandler } = require("../handler/infoHandler");
+
 router
   .route("/")
   .get(async (req, res, next) => {
@@ -75,9 +78,11 @@ router
           if (!isInsert) {
             next(createDetailsPerso(400, { message: "Commande non ajoutée : /orders", file: __filename, line: 76}));
           } else {
+            infoHandler({status : 201, message : "Commande ajoutée : /orders/" + id + "?embed=items"}, req)
             res.status(301).redirect("/orders/" + id + "?embed=items");
           }
         } else {
+          infoHandler({status : 201, message : "Commande ajoutée : /orders/" + id}, req)
           res.status(301).redirect("/orders/" + id);
         }
       }
@@ -159,6 +164,7 @@ router
       if (isUpdate === 0) {
         next(createDetailsPerso(404, { message: "Commande non modifiée : /orders/" + req.params.id, file: __filename, line: 160}));
       } else {
+        infoHandler({status : 204, message : "Commande modifiée : /orders/" + req.params.id}, req)
         res.status(204).send();
       }
     } catch (err) {
