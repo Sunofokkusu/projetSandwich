@@ -36,10 +36,18 @@ router
         let orderFromDb = [];
         orders.forEach((order) => {
           orderFromDb.push({
-            id: order.id,
-            client_mail: order.mail,
-            order_date: order.created_at,
-            total_amount: order.montant,
+            order : {
+              id: order.id,
+              client_name: order.nom,
+              order_date: order.created_at,
+              delivery_date: order.livraison,
+              status: order.status
+            },
+            links: {
+              self: {
+                href: "/orders/"+order.id+"/"
+              }
+            }
           });
         });
         res.setHeader("Content-Type", "application/json");
