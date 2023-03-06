@@ -30,24 +30,24 @@ router
   .get(async (req, res, next) => {
     try {
       let orders = await order.getOrders();
-      let query = req.query
-      if (query.c != undefined) {
-        let mail = decodeURI(query.c)
-        orders = orders.filter(order => mail === order.mail)
-      }
-      if (query.sort != undefined) {
-        switch (query.sort) {
-          case "created": orders = orders.sort((a,b) => b.created_at-a.created_at)
-            break
-          case "delivery": orders = orders.sort((a,b) => b.livraison-a.livraison)
-            break
-          case "amount": orders = orders.sort((a,b) => b.montant-a.montant)
-            break
-        }
-      }
       if (orders.length === 0 || orders === undefined) {
         next(createDetailsPerso(404, { message: "Ressource non trouvée /orders" , file: __filename, line: 31}));
       } else {
+        let query = req.query
+        if (query.c != undefined) {
+          let mail = decodeURI(query.c)
+          orders = orders.filter(order => mail === order.mail)
+        }
+        if (query.sort != undefined) {
+          switch (query.sort) {
+            case "created": orders = orders.sort((a,b) => b.created_at-a.created_at)
+              break
+            case "delivery": orders = orders.sort((a,b) => b.livraison-a.livraison)
+              break
+            case "amount": orders = orders.sort((a,b) => b.montant-a.montant)
+              break
+          }
+        }
         let orderFromDb = [];
         orders.forEach((order) => {
           orderFromDb.push({
