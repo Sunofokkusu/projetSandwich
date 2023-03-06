@@ -30,6 +30,11 @@ router
   .get(async (req, res, next) => {
     try {
       let orders = await order.getOrders();
+      let query = req.query
+      if (query.c != undefined) {
+        let mail = decodeURI(query.c)
+        orders = orders.filter(order => mail == order.mail)
+      }
       if (orders.length === 0) {
         next(createDetailsPerso(404, { message: "Ressource non trouvée /orders" , file: __filename, line: 31}));
       } else {
