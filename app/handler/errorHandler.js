@@ -1,8 +1,8 @@
-const logger = require('../log/logger');
+const logger = require('../helpers/logger');
 
 function errorhandler(err, req, res, next) {
     let message = ""
-    let errorCode = err || 500;
+    let errorCode = err.status || 500;
     switch (errorCode) {
         case 400:
             message = "Bad request";
@@ -26,7 +26,7 @@ function errorhandler(err, req, res, next) {
             message = "Internal server error";
             break;
     }
-    logger.error(errorCode + " " + message + " at " + req.originalUrl );
+    logger.error(errorCode + " " + message + " at  \"" + req.originalUrl + "\" : \"" + err.message + "\" at line " + err.stack.line + " in \"" + err.stack.file + "\"");
     res.status(errorCode).json({
         type: "error",
         error: errorCode,
