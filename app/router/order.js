@@ -48,6 +48,16 @@ router
               break
           }
         }
+        let page = 0
+        let tmp = []
+        if (query.page != undefined) {
+          page = query.page*10-1
+        }
+        for (let i = page; i<=page+10; i++) {
+          tmp.push(orders[i])
+        }
+        orders = tmp
+      
         let orderFromDb = [];
         orders.forEach((order) => {
           orderFromDb.push({
