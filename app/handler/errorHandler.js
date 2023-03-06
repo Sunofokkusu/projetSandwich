@@ -26,11 +26,12 @@ function errorhandler(err, req, res, next) {
             message = "Internal server error";
             break;
     }
-    logger.error(errorCode + " " + message + " at  \"" + req.originalUrl + "\" : \"" + err.message + "\" at line " + err.stack.line + " in \"" + err.stack.file + "\"");
+    logger.error(errorCode + " \"" + message + "\" at  \"" + req.originalUrl + "\" : \"" + err.message + "\" at line " + err.stack.line + " in \"" + err.stack.file + "\"");
+    res.setHeader("Content-Type", "application/json");
     res.status(errorCode).json({
         type: "error",
         error: errorCode,
-        message: message
+        message: err.message ? err.message : message,
     });
 }
 

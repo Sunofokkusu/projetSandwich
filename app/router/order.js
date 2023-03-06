@@ -9,11 +9,18 @@ router.use(express.json());
 const order = require("../database/model/order");
 const item = require("../database/model/items");
 
+// Const 
+
+__filename = "order.js";
+
 // Validator
 const {
   validateUpdate,
   validateInsert,
 } = require("../validator/orderValidator");
+
+// Helpers
+const { createDetails, createDetailsPerso } = require("../helpers/errorDetails");
 
 router
   .route("/")
@@ -21,12 +28,7 @@ router
     try {
       let orders = await order.getOrders();
       if (orders.length === 0) {
-        res.setHeader("Content-Type", "application/json");
-        res.status(404).send({
-          type: "error",
-          error: 404,
-          message: "Ressources non disponible : /orders",
-        });
+        next(createDetailsPerso(404, { message: "Ressource non trouvée /orders" , file: __filename, line: 31}));
       } else {
         let orderFromDb = [];
         orders.forEach((order) => {
@@ -45,7 +47,7 @@ router
         });
       }
     } catch (err) {
-      next(500);
+      next(createDetails(500, err));
     }
   })
   .put(validateInsert, async (req, res, next) => {
@@ -66,33 +68,25 @@ router
         amount
       );
       if (!isInsert) {
-        res.status(400).send({
-          type: "error",
-          error: 400,
-          message: "Ressource non créée : /orders",
-        });
+        next(createDetailsPerso(400, { message: "Commande non ajoutée : /orders", file: __filename, line: 71}));
       } else {
         if (req.body.items != undefined) {
           isInsert = await item.insertItems(id, req.body.items);
           if (!isInsert) {
-            res.status(400).send({
-              type: "error",
-              error: 400,
-              message: "Items non ajoutés : /orders/" + id,
-            });
+            next(createDetailsPerso(400, { message: "Commande non ajoutée : /orders", file: __filename, line: 76}));
           } else {
-            res.status(204).redirect("/orders/" + id + "?embed=items");
+            res.status(301).redirect("/orders/" + id + "?embed=items");
           }
         } else {
-          res.status(204).redirect("/orders/" + id);
+          res.status(301).redirect("/orders/" + id);
         }
       }
     } catch (err) {
-      next(500);
+      next(createDetails(500, err));
     }
   })
   .all((req, res, next) => {
-    next(405);
+    next(createDetailsPerso(405, { message: "Méthode non autorisée : /orders : " + req.method, file: __filename, line: 89}));
   });
 
 router
@@ -102,11 +96,7 @@ router
     try {
       let orders = await order.getOrderById(req.params.id);
       if (orders.length === 0) {
-        res.status(404).send({
-          type: "error",
-          error: 404,
-          message: "Ressources non disponible : /orders/" + req.params.id,
-        });
+        next(createDetailsPerso(404, { message: "Ressource non trouvée : /orders/" + req.params.id, file: __filename, line: 99}));
       } else {
         let query = req.query;
         let json = "";
@@ -154,7 +144,7 @@ router
         res.status(200).send(json);
       }
     } catch (err) {
-      next(500);
+      next(createDetails(500, err));
     }
   })
   .patch(validateUpdate, async (req, res, next) => {
@@ -167,20 +157,16 @@ router
         req.body.mail
       );
       if (isUpdate === 0) {
-        res.status(404).send({
-          type: "error",
-          error: 404,
-          message: "Ressources non disponible : /orders/" + req.params.id,
-        });
+        next(createDetailsPerso(404, { message: "Commande non modifiée : /orders/" + req.params.id, file: __filename, line: 160}));
       } else {
         res.status(204).send();
       }
     } catch (err) {
-      next(500);
+      next(createDetails(500, err));
     }
   })
   .all((req, res, next) => {
-    next(405);
+    next(createDetailsPerso(405, { message: "Méthode non autorisée : /orders : " + req.method, file: __filename, line: 169}));
   });
 
 router
@@ -215,11 +201,11 @@ router
         });
       }
     } catch (err) {
-      next(500);
+      next(createDetails(500, err));
     }
   })
   .all((req, res, next) => {
-    next(405);
+    next(createDetailsPerso(405, { message: "Méthode non autorisée : /orders : " + req.method, file: __filename, line: 208}));
   });
 
 module.exports = router;

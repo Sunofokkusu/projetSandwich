@@ -1,4 +1,4 @@
-function createDetails(err) {
+function createDetails(status, err) {
   let lines = err.stack.split("\n");
   let stack = [];
   lines.forEach((line) => {
@@ -8,7 +8,7 @@ function createDetails(err) {
   let fileLine = file[1].split(":");
   let json = {
     type: "error",
-    status: 500,
+    status: status,
     message: err.message,
     stack: {
       file: fileLine[0],
@@ -18,6 +18,20 @@ function createDetails(err) {
   return json;
 }
 
+
+function createDetailsPerso(status, err) {
+    return{
+        type: "error",
+        status: status,
+        message: err.message,
+        stack: {
+            file: err.file,
+            line: err.line,
+        },
+    }
+}
+
 module.exports = {
     createDetails,
+    createDetailsPerso
 };
