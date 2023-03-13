@@ -49,20 +49,42 @@ router
               break
           }
         }
-        let page = 0
+        let page = 1
         let tmp = []
         if (query.page != undefined) {
-          page = query.page*10-1
+          page = query.page
         }
         let stop = false
-        let i = page
-        while(!stop || i<page+10) { 
+        let i = (page-1) > 0 ? ((parseInt(page)-1)*10) : 0
+        let max = i+10
+        console.log(i, max-1)
+        while(!stop || i<(max-1)) { 
           if (orders[i] === undefined) {
             stop = true
           } else {
             tmp.push(orders[i])
           }
           i++
+        }
+        let lastPageNumber = Math.ceil(length/10)
+        let prevPage = parseInt(page)-1
+        let nextPage = parseInt(page)+1
+        if (prevPage < 1) {
+          prevPage = 1
+        }
+        if (nextPage > lastPageNumber) {
+          nextPage = lastPageNumber
+        }
+        if (page > lastPageNumber) {
+          res.redirect("/orders?page="+lastPageNumber)
+          return
+        }
+        if(page < 1) {
+          res.redirect("/orders?page=1")
+          return
+        }
+        if(tmp.length > 10) {
+          tmp = tmp.slice(0, 10)
         }
         orders = tmp
         let orderFromDb = [];
@@ -86,6 +108,20 @@ router
         res.status(200).send({
           type: "collection",
           count: length,
+          link : {
+            next : {
+              href : "/orders?page="+nextPage
+            },
+            prev : {
+              href : "/orders?page="+prevPage
+            },
+            last : {
+              href : "/orders?page="+lastPageNumber
+            },
+            first : {
+              href : "/orders?page=1"
+            }
+          },
           orders: orderFromDb,
         });
       }
