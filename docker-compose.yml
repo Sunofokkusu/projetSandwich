@@ -24,5 +24,27 @@ services:
     volumes:
       - ./db/data:/var/lib/mysql
       - ./db/sql:/docker-entrypoint-initdb.d
-
+  auth:
+    image: node:alpine
+    container_name: auth-nodejs
+    working_dir: /app/Auth
+    volumes:
+      - ./app/Auth:/app/Auth
+    ports:
+      - "3001:3001"
+    command: "npm run dev"
+    env_file:
+      - .env
+    depends_on:
+      - db
+  dbAuth:
+    image: mysql:5.7
+    container_name: mysql-auth
+    ports:
+      - "3307:3306"
+    env_file:
+      - .env
+    volumes:
+      - ./db/data-auth:/var/lib/mysql
+      - ./db/sql-auth:/docker-entrypoint-initdb.d
 
