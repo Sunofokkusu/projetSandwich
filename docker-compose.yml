@@ -4,9 +4,9 @@ services:
   td1Node:
     image: node:alpine
     container_name: api-nodejs
-    working_dir: /app
+    working_dir: /app/Order
     volumes:
-      - ./app:/app
+      - ./app/Order:/app/Order
     ports:
       - "3000:3000"
     command: "npm run dev"
@@ -25,5 +25,4 @@ services:
       - ./db/data:/var/lib/mysql
       - ./db/sql:/docker-entrypoint-initdb.d
 
-      
 
