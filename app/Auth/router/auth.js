@@ -2,16 +2,19 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
+// Validator
+const {validateInsert} = require('../validator/userValidator');
+
 // Models
-const User = require('../database/models/user');
+const User = require('../database/model/User');
 
 // Routes
-router.post("/signup", async (req, res, next) => {
+router.post("/signup", validateInsert ,async (req, res, next) => {
     if(!req.body.email || !req.body.password || !req.body.username) {
         return next(400);
     }
     try {
-        const user = await User.create(req.body.email, req.body.username, req.body.password);
+        const user = await User.insertUser(req.body.email, req.body.username, req.body.password);
         if(!user) {
             return next(500);
         }else{
@@ -22,6 +25,9 @@ router.post("/signup", async (req, res, next) => {
             });
         }
     } catch (error) {
+        console.log(error);
         next(500);
     }
 });
+
+module.exports = router;
