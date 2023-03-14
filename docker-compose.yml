@@ -15,7 +15,6 @@ services:
     networks:
       - backend
     links:
-      - gateway
       - db
   db:
     image: mysql:5.7
@@ -43,7 +42,6 @@ services:
     networks:
       - backend
     links:
-      - gateway
       - dbAuth
   dbAuth:
     image: mysql:5.7
@@ -70,6 +68,9 @@ services:
       - gateway.env
     networks:
       - backend
+    links:
+      - td1Node
+      - auth
 networks:
   backend:
     driver: bridge

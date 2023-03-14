@@ -18,6 +18,7 @@ router.post("/signup", validateInsert ,async (req, res, next) => {
         if(!user) {
             return next(500);
         }else{
+            console.log(user);
             res.setHeader('Content-Type', 'application/json');
             res.status(201).send({
                 "access-token": jwt.sign({id: user.id, username: user.nom_client, mail: user.mail_client}, process.env.JWT_SECRET, {expiresIn: '1h'}),
@@ -65,7 +66,9 @@ router.get("/validate", async (req, res, next) => {
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         res.status(200).send({
-            id: decoded.id
+            id: decoded.id,
+            email: decoded.email,
+            username: decoded.username
         });
     }catch(err){
         console.log(err);

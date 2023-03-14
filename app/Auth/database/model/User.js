@@ -6,16 +6,24 @@ const randToken = require('rand-token');
 async function insertUser(mail, username, password) {
     try{
         const hash = await bcrypt.hash(password, bcrypt.genSaltSync(parseInt(process.env.SECRET_KEY)));
-        console.log(hash);
+        const refresh_token = randToken.uid(256);
         const user = await db('client').insert({
             nom_client: username,
             mail_client: mail,
             passwd : hash,
-            refreshToken : randToken.uid(256),
-            createdAt : new Date(),
-            updatedAt : new Date()
+            refreshToken : refresh_token,
+            created_at : new Date(),
+            updated_at : new Date()
         });
-        return user;
+        if(!user) {
+            return false;
+        }
+        return {
+            id: user[0],
+            refresh_token : refresh_token,
+            mail: mail,
+            username: username
+        }
     }catch(err){
         throw new Error(err);
     }

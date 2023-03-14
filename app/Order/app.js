@@ -2,8 +2,6 @@
 const express = require("express");
 const app = express();
 
-// CONST
-const PORT = 3000;
 
 // ROUTES
 const routeOrder = require("./router/order");
@@ -16,8 +14,8 @@ const { errorhandler } = require("./handler/errorHandler");
 app.use(errorhandler);
 
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
 });
 
 module.exports = app;
