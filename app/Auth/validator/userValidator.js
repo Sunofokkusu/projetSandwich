@@ -6,6 +6,10 @@ const userValidator = {
         username: joi.string().required(),
         password: joi.string().required(),
     }),
+    connexionUser: joi.object({
+        email: joi.string().email().required(),
+        password: joi.string().required(),
+    })
 }
 
 function validateInsert(req, res, next) {
@@ -21,6 +25,20 @@ function validateInsert(req, res, next) {
     }
 }
 
+function validateConnexion(req, res, next) {
+    const { error } = userValidator.connexionUser.validate(req.body);
+    if(error) {
+        res.status(400).send({
+            type: 'error',
+            error: 400,
+            message: error.details[0].message
+        });
+    }else{
+        next();
+    }
+}
+
 module.exports = {
-    validateInsert
+    validateInsert,
+    validateConnexion
 }
