@@ -9,6 +9,11 @@ app.get('/orders', async (req, res) => {
     res.json(response.data);
 })
 
+app.get('/auth/signup', async (req, res) => {
+    let response = await axios.get(process.env.AUTH_ROUTES + '/signup')
+    res.json(response.data);
+})
+
 app.listen(PORT, () => {
     console.log(`Gateway listening on port ${PORT}`);
 });
