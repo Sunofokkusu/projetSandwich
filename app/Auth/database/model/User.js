@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const  db  = require('../../conf/dbConnexion')
+const randToken = require('rand-token');
 
 
 async function insertUser(mail, username, password) {
@@ -9,7 +10,10 @@ async function insertUser(mail, username, password) {
         const user = await db('client').insert({
             nom_client: username,
             mail_client: mail,
-            passwd : hash
+            passwd : hash,
+            refreshToken : randToken.uid(256),
+            createdAt : new Date(),
+            updatedAt : new Date()
         });
         return user;
     }catch(err){

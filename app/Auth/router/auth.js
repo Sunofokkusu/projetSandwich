@@ -20,7 +20,8 @@ router.post("/signup", validateInsert ,async (req, res, next) => {
         }else{
             res.setHeader('Content-Type', 'application/json');
             res.status(201).send({
-                "access-token": jwt.sign({id: user.id, username: user.nom_client, mail: user.mail_client}, process.env.JWT_SECRET, {expiresIn: '1h'})
+                "access-token": jwt.sign({id: user.id, username: user.nom_client, mail: user.mail_client}, process.env.JWT_SECRET, {expiresIn: '1h'}),
+                "refresh-token": user.refresh_token
             });
         }
     } catch (error) {
@@ -41,7 +42,8 @@ router.post("/signin", validateConnexion, async (req, res, next) => {
         }else{
             res.setHeader('Content-Type', 'application/json');
             res.status(200).send({
-                "access-token": jwt.sign({id: user.id, username: user.nom_client, mail: user.mail_client}, process.env.JWT_SECRET, {expiresIn: '1h'})
+                "access-token": jwt.sign({id: user.id, username: user.nom_client, mail: user.mail_client}, process.env.JWT_SECRET, {expiresIn: '1h'}),
+                "refresh-token": user.refresh_token
             });
         }
     }
