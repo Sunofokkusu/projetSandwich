@@ -17,6 +17,7 @@ CREATE TABLE `client` (
   `mail_client` varchar(256) NOT NULL,
   `passwd` varchar(256) NOT NULL,
   `cumul_achats` decimal(8,2) DEFAULT NULL,
+  `refreshtoken` varchar(256) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)

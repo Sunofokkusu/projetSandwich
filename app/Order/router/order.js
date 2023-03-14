@@ -28,6 +28,7 @@ const { infoHandler } = require("../handler/infoHandler");
 router
   .route("/")
   .get(async (req, res, next) => {
+    console.log("GET /orders");
     try {
       let orders = await order.getOrders();
       if (orders.length === 0 || orders === undefined) {

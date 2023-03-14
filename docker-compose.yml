@@ -7,12 +7,15 @@ services:
     working_dir: /app/Order
     volumes:
       - ./app/Order:/app/Order
-    ports:
-      - "3000:3000"
     command: "npm run dev"
     env_file:
       - order.env
     depends_on:
+      - db
+    networks:
+      - backend
+    links:
+      - gateway
       - db
   db:
     image: mysql:5.7
@@ -24,18 +27,23 @@ services:
     volumes:
       - ./db/data:/var/lib/mysql
       - ./db/sql:/docker-entrypoint-initdb.d
+    networks:
+      - backend
   auth:
     image: node:alpine
     container_name: auth-nodejs
     working_dir: /app/Auth
     volumes:
       - ./app/Auth:/app/Auth
-    ports:
-      - "3001:3001"
     command: "npm run dev"
     env_file:
       - auth.env
     depends_on:
+      - dbAuth
+    networks:
+      - backend
+    links:
+      - gateway
       - dbAuth
   dbAuth:
     image: mysql:5.7
@@ -47,4 +55,24 @@ services:
     volumes:
       - ./db/data-auth:/var/lib/mysql
       - ./db/sql-auth:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+  gateway:
+    image: node:alpine
+    container_name: gateway-nodejs
+    working_dir: /app/Gateway
+    volumes:
+      - ./app/Gateway:/app/Gateway
+    ports:
+      - "3000:3000"
+    command: "npm run dev"
+    env_file:
+      - gateway.env
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
+
+
 

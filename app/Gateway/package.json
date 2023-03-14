@@ -2,13 +2,8 @@
     "dependencies": {
         "express": "^4.17.1",
         "nodemon": "^2.0.20",
-        "knex": "^0.95.6",
-        "mysql": "^2.18.1",
-        "joi" : "^17.4.2",
-        "uuid" : "^8.3.2",
-        "bcrypt" : "^5.0.1",
-        "jsonwebtoken" : "^8.5.1",
-        "rand-token": "1.0.1"
+        "http-proxy-middleware": "2.0.6",
+        "axios" : "^0.21.1"
     },
     "scripts": {
         "start": "node app.js",
