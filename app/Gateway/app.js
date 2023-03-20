@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-const { createProxyMiddleware } = require('http-proxy-middleware');
 const axios  = require('axios');
 
 app.use(express.json());
@@ -19,7 +18,7 @@ app.post('/auth/signup', async (req, res) => {
 app.put('/orders', async (req, res) => {
     let response = await axios.put(process.env.AUTH_ROUTES + '/validate', req.body, {
         headers: {
-            'Authorization': req.headers.Authorization
+            'Authorization': req.headers.authorization
         }
     })
     let json = response.data;
@@ -30,6 +29,11 @@ app.put('/orders', async (req, res) => {
         res.json(json);
     }
 })
+
+app.use("/auth" , require('./router/auth'));
+app.use("/orders", require('./router/order'));
+app.use("/sandwiches", require('./router/sandwiches'));
+
 
 app.listen(PORT, () => {
     console.log(`Gateway listening on port ${PORT}`);
