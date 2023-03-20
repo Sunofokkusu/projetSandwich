@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-app.use(express.json());
+router.use(express.json());
 
-app.get('/', async (req, res) => {
+router.get('/', async (req, res) => {
     let response = await axios.get(process.env.ORDER_ROUTES)
     res.json(response.data);
 })
 
-app.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     let response = await axios.get(process.env.ORDER_ROUTES+req.id)
     res.json(response.data);
 })
 
-app.put('/', async (req, res) => {
+router.put('/', async (req, res) => {
     let response = await axios.put(process.env.AUTH_ROUTES + '/validate', req.body, {
         headers: {
             'Authorization': req.headers.authorization
