@@ -13,7 +13,12 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id', async (req, res, next) => {
     try {
-        let response = await axios.get(process.env.ORDER_ROUTES + '/' + req.params.id)
+        let response = '';
+        if(req.query.embed !== undefined){
+            response = await axios.get(process.env.ORDER_ROUTES + '/' + req.params.id + "?embed=items")
+        }else{
+            response = await axios.get(process.env.ORDER_ROUTES + '/' + req.params.id)
+        }
         res.json(response.data);
     } catch (error) {
         next(500);
