@@ -55,7 +55,7 @@ router.post("/signin", validateConnexion, async (req, res, next) => {
 });
 
 router.get("/validate", async (req, res, next) => {
-    const authorization = req.headers['authorization'];
+    const authorization = req.headers.authorization;
     const token = authorization && authorization.split(' ')[1];
     if(!token) {
         res.status(401).send({
@@ -63,6 +63,7 @@ router.get("/validate", async (req, res, next) => {
             error: 401,
             message: 'Header not found'
         });
+        return;
     }
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -71,13 +72,14 @@ router.get("/validate", async (req, res, next) => {
             email: decoded.email,
             username: decoded.username
         });
+        return;
     }catch(err){
-        console.log(err);
         res.status(401).send({
             type: 'error',
             error: 401,
             message: 'Invalid token'
         });
+        return;
     }
 });
 

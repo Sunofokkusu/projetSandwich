@@ -154,11 +154,11 @@ router
             next(createDetailsPerso(400, { message: "Commande non ajoutée : /orders", file: __filename, line: 76}));
           } else {
             infoHandler({status : 201, message : "Commande ajoutée : /orders/" + id + "?embed=items"}, req)
-            res.status(301).redirect("/orders/" + id + "?embed=items");
+            res.status(201).send({link : "/" + id + "?embed=items"});
           }
         } else {
           infoHandler({status : 201, message : "Commande ajoutée : /orders/" + id}, req)
-          res.status(301).redirect("/orders/" + id);
+          res.status(201).send({link : "/" + id});
         }
       }
     } catch (err) {
@@ -166,7 +166,7 @@ router
     }
   })
   .all((req, res, next) => {
-    next(createDetailsPerso(405, { message: "Méthode non autorisée : /orders : " + req.method, file: __filename, line: 89}));
+    next(createDetailsPerso(405, { message: "Méthode non autorisée : /orders : " + req.method, file: __filename, line: 169}));
   });
 
 router
