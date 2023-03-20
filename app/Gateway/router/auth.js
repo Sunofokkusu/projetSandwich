@@ -12,7 +12,7 @@ router.post('/signup', async (req, res, next) => {
     }
 })
 
-router.post('/signin', async (req, res) => {
+router.post('/signin', async (req, res, next) => {
     try{
         let response = await axios.post(process.env.AUTH_ROUTES + '/signin', req.body)
         res.json(response.data);
