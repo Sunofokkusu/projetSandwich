@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    let response = await axios.get(process.env.SANDWICHES_ROUTES + "?fields=*.*&filter=id,eq," + req.params.id)
+    let response = await axios.get(process.env.SANDWICHES_ROUTES + "?fields=*.*&filter[id]=" + req.params.id)
     res.json(response.data);
 })
 
