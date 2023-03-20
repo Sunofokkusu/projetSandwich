@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-router.use(express.json());
-
 router.get('/', async (req, res) => {
     let response = await axios.get(process.env.ORDER_ROUTES)
     res.json(response.data);
