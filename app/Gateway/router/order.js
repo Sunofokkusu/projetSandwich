@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-    let response = await axios.get(process.env.ORDER_ROUTES+req.id)
+    let response = await axios.get(process.env.ORDER_ROUTES + '/' + req.params.id)
     res.json(response.data);
 })
 
