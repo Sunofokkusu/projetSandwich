@@ -16,6 +16,21 @@ app.post('/auth/signup', async (req, res) => {
     res.json(response.data);
 })
 
+app.put('/orders', async (req, res) => {
+    let response = await axios.put(process.env.AUTH_ROUTES + '/validate', req.body, {
+        headers: {
+            'Authorization': req.headers.Authorization
+        }
+    })
+    let json = response.data;
+    if(json.status === 200) {
+        let response = await axios.post(process.env.ORDER_ROUTES, req.body)
+        res.json(response.data);
+    }else{
+        res.json(json);
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`Gateway listening on port ${PORT}`);
 });

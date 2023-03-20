@@ -55,7 +55,8 @@ router.post("/signin", validateConnexion, async (req, res, next) => {
 });
 
 router.get("/validate", async (req, res, next) => {
-    const token = req.headers['bearer'];
+    const authorization = req.headers['authorization'];
+    const token = authorization && authorization.split(' ')[1];
     if(!token) {
         res.status(401).send({
             type: 'error',
