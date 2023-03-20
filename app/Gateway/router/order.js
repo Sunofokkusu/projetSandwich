@@ -20,7 +20,7 @@ router.get('/:id', async (req, res, next) => {
     }
 })
 
-router.router.get('/:id/items', async (req, res, next) => {
+router.get('/:id/items', async (req, res, next) => {
     try {
         let response = await axios.get(process.env.ORDER_ROUTES + '/' + req.params.id + '/items')
         res.json(response.data);
