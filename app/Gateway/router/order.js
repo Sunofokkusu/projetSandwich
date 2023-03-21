@@ -21,7 +21,7 @@ router
   })
   .post(async (req, res, next) => {
     try {
-      let response = await axios.post(process.env.AUTH_ROUTES + "/validate", {
+      let response = await axios.post(process.env.AUTH_ROUTES + "/validate", null, {
         headers: {
           Authorization: req.headers.authorization,
         },
