@@ -11,14 +11,13 @@ const User = require('../database/model/User');
 // Routes
 router.post("/signup", validateInsert ,async (req, res, next) => {
     if(!req.body.email || !req.body.password || !req.body.username) {
-        return next(400);
+        return next({code: 400, message: "Bad request"});
     }
     try {
         const user = await User.insertUser(req.body.email, req.body.username, req.body.password);
         if(!user) {
             return next(500);
         }else{
-            console.log(user);
             res.setHeader('Content-Type', 'application/json');
             res.status(201).send({
                 "access-token": jwt.sign({id: user.id, username: user.nom_client, mail: user.mail_client}, process.env.JWT_SECRET, {expiresIn: '1h'}),
@@ -26,45 +25,39 @@ router.post("/signup", validateInsert ,async (req, res, next) => {
             });
         }
     } catch (error) {
-        console.log(error);
-        next(500);
+        next(error);
     }
 });
 
 
 router.post("/signin", validateConnexion, async (req, res, next) => {
     if(!req.body.email || !req.body.password) {
-        return next(400);
+        return next({code: 400, message: "Bad request"});
     }
     try{
         const user = await User.getUser(req.body.email, req.body.password);
         if(!user) {
-            return next(401);
+            return next({code: 401, message: "Unauthorized"});
         }else{
             res.setHeader('Content-Type', 'application/json');
             res.status(200).send({
-                "access-token": jwt.sign({id: user.id, username: user.nom_client, mail: user.mail_client}, process.env.JWT_SECRET, {expiresIn: '1h'}),
+                "access-token": "Bearer " + jwt.sign({id: user.id, username: user.nom_client, mail: user.mail_client}, process.env.JWT_SECRET, {expiresIn: '1h'}),
                 "refresh-token": user.refresh_token
             });
         }
     }
     catch(err){
-        console.log(err);
-        next(500);
+        next(err);
     }
 });
 
-router.get("/validate", async (req, res, next) => {
+router.post("/validate", async (req, res, next) => {
     const authorization = req.headers.authorization;
-    const token = authorization && authorization.split(' ')[1];
-    if(!token) {
-        res.status(401).send({
-            type: 'error',
-            error: 401,
-            message: 'Header not found'
-        });
+    if(!authorization) {
+        next({code: 401, message: "Unauthorized"});
         return;
     }
+    const token = authorization.split(' ')[1];
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         res.status(200).send({
@@ -74,13 +67,12 @@ router.get("/validate", async (req, res, next) => {
         });
         return;
     }catch(err){
-        res.status(401).send({
-            type: 'error',
-            error: 401,
-            message: 'Invalid token'
-        });
-        return;
+        next(err);
     }
+});
+
+router.all("*", (req, res, next) => {
+    next({code : 405, message: "Method not allowed"});
 });
 
 

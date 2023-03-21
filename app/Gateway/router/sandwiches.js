@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
         let response = await axios.get(process.env.SANDWICHES_ROUTES+ "?fields=*.*")
         res.json(response.data);
     }catch(err){
-        next(500);
+        next(err.response.data);
     }
 })
 
@@ -17,7 +17,7 @@ router.get('/:id', async (req, res, next) => {
         let response = await axios.get(process.env.SANDWICHES_ROUTES + "?fields=*.*&filter[id]=" + req.params.id)
         res.json(response.data);
     }catch(err){
-        next(500);
+        next(err.response.data);
     }
 })
 

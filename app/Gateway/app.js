@@ -9,6 +9,9 @@ app.use("/auth" , require('./router/auth'));
 app.use("/orders", require('./router/order'));
 app.use("/sandwiches", require('./router/sandwiches'));
 
+// Handler
+const { errorhandler } = require("./handler/errorHandler");
+app.use(errorhandler);
 
 app.listen(PORT, () => {
     console.log(`Gateway listening on port ${PORT}`);
